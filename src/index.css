@@ -1,0 +1,283 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+@layer base {
+  * {
+    @apply border-gray-200;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+    margin: 0;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold text-gray-900;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+
+  h4 {
+    @apply text-xl font-semibold;
+  }
+}
+
+@layer components {
+  /* Professional Card Styles */
+  .card {
+    @apply bg-white rounded-lg border border-gray-200 shadow-sm;
+    @apply transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply card hover:shadow-md hover:border-gray-300;
+    @apply hover:-translate-y-0.5;
+  }
+
+  .card-elevated {
+    @apply bg-white rounded-xl border border-gray-200 shadow-md;
+  }
+
+  /* Professional Button Styles */
+  .btn {
+    @apply px-4 py-2.5 rounded-lg font-medium;
+    @apply transition-all duration-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-navy text-white shadow-sm;
+  }
+  
+  .btn-primary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(98, 125, 152, 0.5);
+  }
+  
+  .btn-primary:hover {
+    background-color: #243B53;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .btn-accent {
+    @apply btn bg-accent-gold text-white shadow-sm;
+  }
+  
+  .btn-accent:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.5);
+  }
+  
+  .btn-accent:hover {
+    background-color: #D97706;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
+
+  .btn-secondary {
+    @apply btn bg-white text-gray-700 border-2 border-gray-300;
+    @apply hover:bg-gray-50 hover:border-gray-400;
+  }
+  
+  .btn-secondary:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.5);
+  }
+
+  /* Professional Input Styles */
+  .input {
+    @apply w-full px-4 py-2.5 rounded-lg border border-gray-300;
+    @apply bg-white text-gray-900 placeholder-gray-400;
+    @apply transition-all duration-200;
+  }
+  
+  .input:focus {
+    @apply outline-none;
+    border-color: #0F172A;
+    box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.2);
+  }
+
+  .input-error {
+    @apply input;
+    border-color: #EF4444;
+  }
+  
+  .input-error:focus {
+    border-color: #EF4444;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  }
+
+  /* Professional Badge Styles */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply badge bg-semantic-success-50 text-semantic-success-700 border border-semantic-success-200;
+  }
+
+  .badge-warning {
+    @apply badge bg-semantic-warning-50 text-semantic-warning-700 border border-semantic-warning-200;
+  }
+
+  .badge-danger {
+    @apply badge bg-semantic-danger-50 text-semantic-danger-700 border border-semantic-danger-200;
+  }
+
+  .badge-info {
+    @apply badge bg-semantic-info-50 text-semantic-info-700 border border-semantic-info-200;
+  }
+
+  /* Professional Metric Display */
+  .metric-value {
+    @apply text-4xl font-bold text-gray-900 tracking-tight;
+  }
+
+  .metric-label {
+    @apply text-sm font-medium text-gray-500 uppercase tracking-wider;
+  }
+
+  .metric-subtitle {
+    @apply text-sm text-gray-600 mt-1;
+  }
+
+  /* Professional Table Styles */
+  .table {
+    @apply w-full border-collapse;
+  }
+
+  .table th {
+    @apply px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider;
+    @apply border-b border-gray-200 bg-gray-50;
+  }
+
+  .table td {
+    @apply px-4 py-3 text-sm text-gray-900 border-b border-gray-100;
+  }
+
+  .table tr:hover {
+    @apply bg-gray-50;
+  }
+
+  /* Professional Progress Bar */
+  .progress-bar {
+    @apply w-full bg-gray-200 rounded-full h-2 overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full rounded-full transition-all duration-500;
+  }
+
+  /* Glassmorphism Effect */
+  .glass {
+    @apply bg-white/80 backdrop-blur-lg border border-white/20;
+  }
+
+  /* Professional Gradient Text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(to right, #0F172A, #334E68);
+  }
+
+  .gradient-text-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-gold to-accent-600;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Professional Text Shadows */
+  .text-shadow-sm {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Professional Backdrop Effects */
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+  }
+
+  /* Modern Animations */
+  @keyframes shimmer {
+    0% {
+      background-position: -1000px 0;
+    }
+    100% {
+      background-position: 1000px 0;
+    }
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+  }
+
+  /* Glassmorphism Enhanced */
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  /* Gradient Animations */
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .gradient-animated {
+    background-size: 200% 200%;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  /* Pulse Glow */
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
+    }
+  }
+
+  .pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+}
