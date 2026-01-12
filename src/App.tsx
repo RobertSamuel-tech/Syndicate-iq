@@ -7,6 +7,7 @@ import { Spinner } from './components/ui/Progress';
 const Dashboard = lazy(() => import('./pages/Dashboard').then((module) => ({ default: module.Dashboard })));
 const DocumentProcessing = lazy(() => import('./pages/DocumentProcessing').then((module) => ({ default: module.DocumentProcessing })));
 const DueDiligence = lazy(() => import('./pages/DueDiligence').then((module) => ({ default: module.DueDiligence })));
+const DueDiligenceWorkflow = lazy(() => import('./pages/DueDiligenceWorkflow').then((module) => ({ default: module.DueDiligenceWorkflowPage })));
 const CovenantMonitoring = lazy(() => import('./pages/CovenantMonitoring').then((module) => ({ default: module.CovenantMonitoring })));
 const ESGMonitoring = lazy(() => import('./pages/ESGMonitoring').then((module) => ({ default: module.ESGMonitoring })));
 const ESGVeritas = lazy(() => import('./pages/ESGVeritas').then((module) => ({ default: module.ESGVeritas })));
@@ -29,6 +30,7 @@ function AppRoutes() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/document-processing" element={<DocumentProcessing />} />
       <Route path="/due-diligence" element={<DueDiligence />} />
+      <Route path="/due-diligence-workflow" element={<DueDiligenceWorkflow />} />
       <Route path="/covenant-monitoring" element={<CovenantMonitoring />} />
       <Route path="/esg-monitoring" element={<ESGMonitoring />} />
       <Route path="/esg-veritas" element={<ESGVeritas />} />

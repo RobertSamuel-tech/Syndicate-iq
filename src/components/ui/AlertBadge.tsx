@@ -15,64 +15,65 @@ export default function AlertBadge({ severity, message, timestamp, action }: Ale
   const config = {
     info: {
       icon: Info,
-      bgColor: 'bg-semantic-info-50',
-      borderColor: 'border-semantic-info-200',
-      textColor: 'text-semantic-info-800',
-      iconColor: 'text-semantic-info-600',
-      iconBg: 'bg-semantic-info-100',
+      borderColor: 'border-l-cyan-500/50',
+      textColor: 'text-white',
+      iconColor: 'text-cyan-400',
+      iconBg: 'bg-cyan-500/20',
     },
     warning: {
       icon: AlertTriangle,
-      bgColor: 'bg-semantic-warning-50',
-      borderColor: 'border-semantic-warning-200',
-      textColor: 'text-semantic-warning-800',
-      iconColor: 'text-semantic-warning-600',
-      iconBg: 'bg-semantic-warning-100',
+      borderColor: 'border-l-amber-500/50',
+      textColor: 'text-white',
+      iconColor: 'text-amber-400',
+      iconBg: 'bg-amber-500/20',
     },
     critical: {
       icon: AlertCircle,
-      bgColor: 'bg-semantic-danger-50',
-      borderColor: 'border-semantic-danger-300',
-      textColor: 'text-semantic-danger-800',
-      iconColor: 'text-semantic-danger-600',
-      iconBg: 'bg-semantic-danger-100',
+      borderColor: 'border-l-red-500/50',
+      textColor: 'text-white',
+      iconColor: 'text-red-400',
+      iconBg: 'bg-red-500/20',
     },
     success: {
       icon: CheckCircle2,
-      bgColor: 'bg-semantic-success-50',
-      borderColor: 'border-semantic-success-200',
-      textColor: 'text-semantic-success-800',
-      iconColor: 'text-semantic-success-600',
-      iconBg: 'bg-semantic-success-100',
+      borderColor: 'border-l-green-500/50',
+      textColor: 'text-white',
+      iconColor: 'text-green-400',
+      iconBg: 'bg-green-500/20',
     },
   };
 
-  const { icon: Icon, bgColor, borderColor, textColor, iconColor, iconBg } = config[severity];
+  const { icon: Icon, borderColor, textColor, iconColor, iconBg } = config[severity];
 
   return (
     <motion.div
       initial={{ opacity: 0, x: -10 }}
       animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6 }}
+      whileHover={{ x: 4, scale: 1.01 }}
       className={`
-        ${bgColor} ${borderColor}
-        border-l-4 rounded-lg p-4
-        shadow-sm hover:shadow-md
-        transition-all duration-200
+        glass-sm ${borderColor}
+        border-l-4 rounded-xl p-4
+        border border-white/10
+        shadow-lg hover:shadow-xl hover:scale-[1.02]
+        hover:bg-white/12
+        transition-all duration-300
+        text-white
       `}
     >
       <div className="flex items-start gap-3">
         <div className={`
-          ${iconBg} ${iconColor}
-          p-2 rounded-lg flex-shrink-0
+          ${iconBg}
+          p-2 rounded-lg flex-shrink-0 backdrop-blur-sm
         `}>
-          <Icon size={20} />
+          <Icon size={20} className={iconColor} />
         </div>
         <div className="flex-1 min-w-0">
           <p className={`${textColor} font-medium text-sm leading-relaxed`}>
             {message}
           </p>
           {timestamp && (
-            <p className="text-xs text-gray-500 mt-1.5">
+            <p className="text-xs text-white/50 mt-1.5">
               {timestamp.toLocaleString()}
             </p>
           )}
@@ -84,7 +85,7 @@ export default function AlertBadge({ severity, message, timestamp, action }: Ale
               px-3 py-1.5 rounded-lg text-xs font-medium
               ${textColor} ${iconBg}
               hover:opacity-80 transition-opacity
-              flex-shrink-0
+              flex-shrink-0 backdrop-blur-sm
             `}
           >
             {action.label}

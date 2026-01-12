@@ -224,6 +224,22 @@ export interface ESGVerificationResult {
     status: 'match' | 'minor' | 'major' | 'critical';
   }>;
   
+  // Claimed vs Verified Metrics (detailed)
+  claimedVerifiedMetrics?: Array<{
+    metric: string;
+    claimed: string;
+    verified: string;
+    deviation: string;
+    status: string;
+  }>;
+  
+  // Verification Sources (detailed)
+  verificationSources?: Array<{
+    source: string;
+    confidence: 'High' | 'Medium' | 'Low';
+    notes: string;
+  }>;
+  
   // Compliance
   lmaCompliance: {
     greenLoanPrinciples: boolean;

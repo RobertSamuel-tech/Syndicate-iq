@@ -1,27 +1,17 @@
 import * as React from 'react';
-import { motion } from 'framer-motion';
 import { cn } from '../../lib/utils/cn';
 
-function Card({ className, children, ...props }: React.ComponentProps<'div'>) {
-  // Check if children use CardHeader/CardContent pattern
-  const hasStructuredContent = React.Children.toArray(children).some(
-    (child) => React.isValidElement(child) && child.type === CardHeader
-  );
-
+function Card({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
+    <div
       data-slot="card"
       className={cn(
-        'bg-white text-gray-900 flex flex-col rounded-xl border border-gray-200 shadow-sm',
-        hasStructuredContent ? 'gap-6 py-6' : 'p-6',
+        'glass-lg flex flex-col gap-6 py-6 text-white border border-white/20',
+        'hover:border-white/30 transition-all duration-300',
         className,
       )}
       {...props}
-    >
-      {children}
-    </motion.div>
+    />
   );
 }
 
@@ -30,7 +20,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<'div'>) {
     <div
       data-slot="card-header"
       className={cn(
-        'grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6',
+        '@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-1.5 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6',
         className,
       )}
       {...props}
@@ -42,7 +32,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-title"
-      className={cn('leading-none font-semibold text-gray-900', className)}
+      className={cn('leading-none font-semibold', className)}
       {...props}
     />
   );
@@ -52,7 +42,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="card-description"
-      className={cn('text-gray-600 text-sm', className)}
+      className={cn('text-muted-foreground text-sm', className)}
       {...props}
     />
   );

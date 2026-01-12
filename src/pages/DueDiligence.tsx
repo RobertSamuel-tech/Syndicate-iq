@@ -1,7 +1,12 @@
 import { useState } from 'react';
-import { Play, CheckCircle, AlertCircle, Clock, Download } from 'lucide-react';
+import { Play, CheckCircle, AlertCircle, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
 import MetricCard from '@/components/ui/MetricCard';
 import ComparisonCard from '@/components/features/ComparisonCard';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
 import { type DueDiligenceCheck, type DueDiligenceReportGuide } from '@/types';
 import { sampleLoans } from '@/lib/data/sampleData';
 
@@ -106,7 +111,16 @@ export function DueDiligence() {
           checks: initialChecks.map((check, idx) => ({
             ...check,
             status: 'complete',
-            result: idx === 1 ? 'warning' : 'pass',
+            result: idx === 0 
+              ? 'pass' as const  // Credit Risk Assessment - PASS
+              : idx === 1 
+              ? 'warning' as const  // Covenant Compliance - WARNING
+              : 'pass' as const,  // All others - PASS
+            details: idx === 0
+              ? 'Borrower credit rating and financial health verified - Approved'
+              : idx === 1
+              ? 'Covenant compliance verified - cushion narrowing, recommend monitoring'
+              : check.details + ' - Verified',
             timestamp: new Date()
           })),
           summary: {
@@ -136,8 +150,14 @@ export function DueDiligence() {
             ? { 
                 ...check, 
                 status: 'complete' as const,
-                result: checkIndex === 1 ? 'warning' as const : 'pass' as const,
-                details: checkIndex === 1 
+                result: checkIndex === 0 
+                  ? 'pass' as const  // Credit Risk Assessment - PASS
+                  : checkIndex === 1 
+                  ? 'warning' as const  // Covenant Compliance - WARNING
+                  : 'pass' as const,  // All others - PASS
+                details: checkIndex === 0
+                  ? 'Borrower credit rating and financial health verified - Approved'
+                  : checkIndex === 1 
                   ? 'Covenant compliance verified - cushion narrowing, recommend monitoring'
                   : check.details + ' - Verified'
               }
@@ -151,55 +171,77 @@ export function DueDiligence() {
 
   const getCheckIcon = (check: DueDiligenceCheck) => {
     if (check.status === 'complete') {
-      if (check.result === 'pass') return <CheckCircle className="text-green-500" size={20} />;
-      if (check.result === 'warning') return <AlertCircle className="text-amber-500" size={20} />;
-      if (check.result === 'fail') return <AlertCircle className="text-red-500" size={20} />;
+      if (check.result === 'pass') return <CheckCircle className="text-green-400" size={20} />;
+      if (check.result === 'warning') return <AlertCircle className="text-amber-400" size={20} />;
+      if (check.result === 'fail') return <AlertCircle className="text-red-400" size={20} />;
     }
     if (check.status === 'processing') {
-      return <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>;
+      return <div className="animate-spin rounded-full h-5 w-5 border-2 border-cyan-400/30 border-t-cyan-400"></div>;
     }
-    return <div className="w-5 h-5 rounded-full border-2 border-slate-300"></div>;
+    return <div className="w-5 h-5 rounded-full border-2 border-white/30"></div>;
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 lg:p-8">
+    <div className="space-y-8">
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-semantic-info/5 via-accent-gold/5 to-semantic-info/5 rounded-2xl blur-3xl" />
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="relative"
+        >
           <div className="relative">
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-3">
+            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-3">
               Settlement Due Diligence Accelerator
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-white/60">
               Automate pre-trade verification and accelerate settlement by 85%
             </p>
           </div>
-        </div>
+        </motion.div>
 
         {/* Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <MetricCard
-          title="Settlement Time"
-          value="2 hours"
-          subtitle="vs 10-14 days traditional"
-          icon={Clock}
-          color="blue"
-        />
-        <MetricCard
-          title="Cost Savings"
-          value="$20K"
-          subtitle="per trade on average"
-          icon={CheckCircle}
-          color="green"
-        />
-        <MetricCard
-          title="LMA Priority"
-          value="25%"
-          subtitle="settlement improvement goal"
-          color="slate"
-        />
-      </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.6 }}
+          >
+            <MetricCard
+              title="Settlement Time"
+              value="2 hours"
+              subtitle="vs 10-14 days traditional"
+              icon={Clock}
+              color="blue"
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+          >
+            <MetricCard
+              title="Cost Savings"
+              value="$20K"
+              subtitle="per trade on average"
+              icon={CheckCircle}
+              color="green"
+            />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            <MetricCard
+              title="LMA Priority"
+              value="25%"
+              subtitle="settlement improvement goal"
+              color="slate"
+            />
+          </motion.div>
+        </div>
 
         {/* Comparison Card */}
         <ComparisonCard
@@ -218,217 +260,274 @@ export function DueDiligence() {
         />
 
         {/* Trade Setup */}
-        <div className="card-elevated p-8">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-1 h-8 bg-gradient-to-b from-accent-gold to-accent-600 rounded-full" />
-            <h2 className="text-2xl font-bold text-gray-900">Initiate Due Diligence</h2>
-          </div>
-          
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">
-                Select Loan for Trade
-              </label>
-              <select
-                value={selectedLoan}
-                onChange={(e) => setSelectedLoan(e.target.value)}
-                className="input"
-                disabled={running}
-              >
-              <option value="">Choose a loan...</option>
-              {sampleLoans.map(loan => (
-                <option key={loan.id} value={loan.id}>
-                  {loan.basicDetails.borrower} - {loan.basicDetails.currency} {loan.basicDetails.amount.toLocaleString()}
-                </option>
-              ))}
-            </select>
-          </div>
-
-            {/* Trade Amount */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">
-                Enter Trade Amount
-              </label>
-              <input
-                type="number"
-                placeholder="Enter amount"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="input"
-                disabled={running}
-              />
-            </div>
-
-            {/* Currency Selector */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2 uppercase tracking-wider">
-                Select Currency
-              </label>
-              <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
-                className="input"
-                disabled={running}
-              >
-              {currencies.map((cur) => (
-                <option key={cur.code} value={cur.code}>
-                  {cur.code} — {cur.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-            {/* Trade Preview */}
-            {amount && (
-              <div className="p-4 bg-gradient-to-r from-semantic-info-50 to-semantic-info-100/50 border-2 border-semantic-info-200 rounded-xl">
-                <p className="text-sm font-semibold text-semantic-info-800 uppercase tracking-wider mb-1">
-                  Trade Preview
-                </p>
-                <p className="text-2xl font-bold text-semantic-info-700">
-                  {currency} {Number(amount || 0).toLocaleString()}
-                </p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+        >
+          <Card className="p-8">
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-1 h-8 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-full" />
+                <CardTitle className="text-2xl font-bold text-white">Initiate Due Diligence</CardTitle>
               </div>
-            )}
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                <div>
+                  <Select
+                    label="Select Loan for Trade"
+                    value={selectedLoan}
+                    onChange={(e) => setSelectedLoan(e.target.value)}
+                    disabled={running}
+                    className="text-white bg-white/5"
+                  >
+                    <option value="" className="bg-background text-white">Choose a loan...</option>
+                    {sampleLoans.map(loan => (
+                      <option key={loan.id} value={loan.id} className="bg-background text-white">
+                        {loan.basicDetails.borrower} - {loan.basicDetails.currency} {loan.basicDetails.amount.toLocaleString()}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
 
-            <button
-              onClick={startDueDiligence}
-              disabled={!selectedLoan || running}
-              className="btn-primary w-full py-3.5 text-lg flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
-            >
-            <Play size={20} />
-            {running ? 'Running Verification...' : 'Start Automated Due Diligence'}
-          </button>
-        </div>
-      </div>
+                {/* Trade Amount */}
+                <div>
+                  <Input
+                    label="Enter Trade Amount"
+                    type="number"
+                    placeholder="0.00"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
+                    disabled={running}
+                    className="text-white bg-white/5"
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
+
+                {/* Currency Selector */}
+                <div>
+                  <Select
+                    label="Select Currency"
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    disabled={running}
+                    className="text-white bg-white/5"
+                  >
+                    {currencies.map((cur) => (
+                      <option key={cur.code} value={cur.code} className="bg-background text-white">
+                        {cur.code} — {cur.name}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+
+                {/* Trade Preview */}
+                {amount && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="glass-sm p-6 rounded-xl border border-cyan-500/40 hover:border-cyan-500/50 transition-all"
+                  >
+                    <p className="text-sm font-semibold text-white/60 uppercase tracking-wider mb-2">
+                      Trade Preview
+                    </p>
+                    <p className="text-3xl font-bold text-cyan-400">
+                      {currency} {Number(amount || 0).toLocaleString()}
+                    </p>
+                  </motion.div>
+                )}
+
+                <Button
+                  onClick={startDueDiligence}
+                  disabled={!selectedLoan || running}
+                  variant="glass"
+                  className="w-full py-5 text-lg font-semibold flex items-center justify-center gap-3 
+                    bg-gradient-to-r from-cyan-600/40 via-cyan-500/50 to-teal-500/40 
+                    border-2 border-cyan-400/50 
+                    hover:from-cyan-500/50 hover:via-cyan-400/60 hover:to-teal-400/50 
+                    hover:border-cyan-300/70 
+                    hover:shadow-lg hover:shadow-cyan-500/30 
+                    active:scale-[0.98]
+                    disabled:from-slate-700/30 disabled:via-slate-700/30 disabled:to-slate-700/30 
+                    disabled:border-slate-600/30 disabled:cursor-not-allowed disabled:opacity-50
+                    transition-all duration-300 
+                    relative overflow-hidden
+                    group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-600/0 via-cyan-400/20 to-teal-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative z-10 flex items-center justify-center gap-3">
+                    {running ? (
+                      <div className="p-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
+                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-cyan-200/30 border-t-cyan-200"></div>
+                      </div>
+                    ) : (
+                      <div className="p-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 
+                        group-hover:bg-white/20 group-hover:border-white/30 
+                        transition-all duration-300">
+                        <Play size={20} className="text-cyan-200 group-hover:text-white transition-colors" />
+                      </div>
+                    )}
+                    <span className="text-white tracking-wide">
+                      {running ? 'Running Verification...' : 'Start Automated Due Diligence'}
+                    </span>
+                  </div>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* Verification Progress */}
         {checks.length > 0 && (
-          <div className="card-elevated p-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-slate-800">Verification Progress</h2>
-            <div className="text-sm text-slate-600">
-              Elapsed Time: <span className="font-mono font-bold">{Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}</span>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {checks.map((check, idx) => (
-              <div
-                key={idx}
-                className={`p-4 rounded-lg border-2 ${
-                  check.status === 'processing' 
-                    ? 'border-blue-500 bg-blue-50' 
-                    : check.status === 'complete'
-                    ? check.result === 'pass'
-                      ? 'border-green-200 bg-green-50'
-                      : check.result === 'warning'
-                      ? 'border-amber-200 bg-amber-50'
-                      : 'border-red-200 bg-red-50'
-                    : 'border-slate-200 bg-slate-50'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  {getCheckIcon(check)}
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-slate-800">{check.checkName}</h3>
-                    <p className="text-sm text-slate-600 mt-1">{check.details}</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Card className="p-8">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-xl font-bold text-white">Verification Progress</CardTitle>
+                  <div className="text-sm text-white/60">
+                    Elapsed Time: <span className="font-mono font-bold text-cyan-400">{Math.floor(elapsedTime / 60)}:{(elapsedTime % 60).toString().padStart(2, '0')}</span>
                   </div>
-                  {check.status === 'complete' && (
-                    <span className={`text-xs font-medium px-3 py-1 rounded-full ${
-                      check.result === 'pass' 
-                        ? 'bg-green-100 text-green-700'
-                        : check.result === 'warning'
-                        ? 'bg-amber-100 text-amber-700'
-                        : 'bg-red-100 text-red-700'
-                    }`}>
-                      {check.result?.toUpperCase()}
-                    </span>
-                  )}
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {checks.map((check, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: idx * 0.1 }}
+                      className={`glass-sm p-4 rounded-xl border ${
+                        check.status === 'processing' 
+                          ? 'border-cyan-500/50 bg-cyan-500/10' 
+                          : check.status === 'complete'
+                          ? check.result === 'pass'
+                            ? 'border-green-500/50 bg-green-500/10'
+                            : check.result === 'warning'
+                            ? 'border-amber-500/50 bg-amber-500/10'
+                            : 'border-red-500/50 bg-red-500/10'
+                          : 'border-white/10'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        {getCheckIcon(check)}
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-white">{check.checkName}</h3>
+                          <p className="text-sm text-white/60 mt-1">{check.details}</p>
+                        </div>
+                        {check.status === 'complete' && check.result && (
+                          <span className={`text-xs font-bold px-4 py-2 rounded-md border-2 ${
+                            check.result === 'pass' 
+                              ? 'bg-green-500/30 text-green-300 border-green-500/50 shadow-lg shadow-green-500/20'
+                              : check.result === 'warning'
+                              ? 'bg-amber-500/30 text-amber-300 border-amber-500/50 shadow-lg shadow-amber-500/20'
+                              : 'bg-red-500/30 text-red-300 border-red-500/50 shadow-lg shadow-red-500/20'
+                          }`}>
+                            {check.result === 'fail' ? 'CRITICAL' : check.result.toUpperCase()}
+                          </span>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Final Report */}
         {report && (
-          <div className="card-elevated p-8">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-1">Due Diligence Report</h2>
-                <p className="text-sm text-gray-500">Generated in {report.completionTime} hours</p>
-              </div>
-              <button className="btn-primary flex items-center gap-2 shadow-md hover:shadow-lg">
-                <Download size={18} />
-                Download PDF
-              </button>
-            </div>
-
-            {/* Executive Summary */}
-            <div className="bg-gradient-to-br from-gray-50 to-white rounded-xl p-6 mb-6 border border-gray-200">
-            <h3 className="text-lg font-semibold text-slate-800 mb-4">Executive Summary</h3>
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <p className="text-sm text-slate-500 mb-1">Overall Risk Assessment</p>
-                <span className={`inline-block px-4 py-2 rounded-full font-medium ${
-                  report.summary.overallRisk === 'low'
-                    ? 'bg-green-100 text-green-700'
-                    : report.summary.overallRisk === 'medium'
-                    ? 'bg-amber-100 text-amber-700'
-                    : 'bg-red-100 text-red-700'
-                }`}>
-                  {report.summary.overallRisk.toUpperCase()} RISK
-                </span>
-              </div>
-              <div>
-                <p className="text-sm text-slate-500 mb-1">Recommendation</p>
-                <p className="font-medium text-slate-800">{report.summary.recommendation}</p>
-              </div>
-              <div>
-                <p className="text-sm text-slate-500 mb-1">Completion Time</p>
-                <p className="font-medium text-slate-800">{report.completionTime} hours</p>
-                <p className="text-xs text-slate-500 mt-1">vs. 10-14 days traditional</p>
-              </div>
-              <div>
-                <p className="text-sm text-slate-500 mb-1">Cost Savings</p>
-                <p className="font-medium text-green-600 text-xl">
-                  ${report.summary.totalCostSaved.toLocaleString()}
-                </p>
-              </div>
-            </div>
-          </div>
-
-            {/* Detailed Findings */}
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Detailed Findings</h3>
-              <div className="space-y-3">
-                {report.checks.map((check, idx) => (
-                  <div key={idx} className="flex items-start gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors">
-                    {check.result === 'pass' && (
-                      <div className="p-2 bg-semantic-success-100 rounded-lg">
-                        <CheckCircle className="text-semantic-success-600" size={20} />
-                      </div>
-                    )}
-                    {check.result === 'warning' && (
-                      <div className="p-2 bg-semantic-warning-100 rounded-lg">
-                        <AlertCircle className="text-semantic-warning-600" size={20} />
-                      </div>
-                    )}
-                    {check.result === 'fail' && (
-                      <div className="p-2 bg-semantic-danger-100 rounded-lg">
-                        <AlertCircle className="text-semantic-danger-600" size={20} />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <p className="font-semibold text-gray-900 mb-1">{check.checkName}</p>
-                      <p className="text-sm text-gray-600">{check.details}</p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <Card className="p-8">
+              <CardHeader>
+                <div>
+                  <CardTitle className="text-2xl font-bold text-white mb-1">Due Diligence Report</CardTitle>
+                  <p className="text-sm text-white/60">Generated in {report.completionTime} hours</p>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {/* Executive Summary */}
+                <div className="glass-lg p-6 mb-6 rounded-xl border border-white/20">
+                  <h3 className="text-lg font-semibold text-white mb-4">Executive Summary</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <p className="text-sm text-white/60 mb-2 uppercase tracking-wider">Overall Risk Assessment</p>
+                      <span className={`inline-block px-4 py-2 rounded-full font-medium ${
+                        report.summary.overallRisk === 'low'
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                          : report.summary.overallRisk === 'medium'
+                          ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                          : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                      }`}>
+                        {report.summary.overallRisk.toUpperCase()} RISK
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm text-white/60 mb-2 uppercase tracking-wider">Recommendation</p>
+                      <p className="font-medium text-white">{report.summary.recommendation}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-white/60 mb-2 uppercase tracking-wider">Completion Time</p>
+                      <p className="font-medium text-white text-lg">{report.completionTime} hours</p>
+                      <p className="text-xs text-white/50 mt-1">vs. 10-14 days traditional</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-white/60 mb-2 uppercase tracking-wider">Cost Savings</p>
+                      <p className="font-medium text-green-400 text-2xl">
+                        ${report.summary.totalCostSaved.toLocaleString()}
+                      </p>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </div>
+                </div>
+
+                {/* Detailed Findings */}
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-4">Detailed Findings</h3>
+                  <div className="space-y-3">
+                    {report.checks.map((check, idx) => (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: idx * 0.05 }}
+                        className="flex items-start gap-4 p-4 glass-sm rounded-xl border border-white/15 hover:bg-white/8 hover:border-white/25 transition-all"
+                      >
+                        {check.result === 'pass' && (
+                          <div className="p-2 bg-green-500/20 rounded-lg border border-green-500/30">
+                            <CheckCircle className="text-green-400" size={20} />
+                          </div>
+                        )}
+                        {check.result === 'warning' && (
+                          <div className="p-2 bg-amber-500/20 rounded-lg border border-amber-500/30">
+                            <AlertCircle className="text-amber-400" size={20} />
+                          </div>
+                        )}
+                        {check.result === 'fail' && (
+                          <div className="p-2 bg-red-500/20 rounded-lg border border-red-500/30">
+                            <AlertCircle className="text-red-400" size={20} />
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <p className="font-semibold text-white mb-1">{check.checkName}</p>
+                          <p className="text-sm text-white/60">{check.details}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
         )}
       </div>
     </div>

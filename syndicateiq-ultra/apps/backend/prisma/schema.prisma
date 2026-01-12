@@ -1,0 +1,93 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Document {
+  id            String   @id @default(cuid())
+  filename      String
+  fileHash      String   @unique
+  fileSize      Int
+  mimeType      String
+  uploadDate    DateTime @default(now())
+  fingerprint   Json?
+  extractedText String?  @db.Text
+  status        String   @default("pending")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  metrics       Metric[]
+  claims        Claim[]
+  riskScores    RiskScore[]
+  feedback      Feedback[]
+
+  @@index([fileHash])
+  @@index([status])
+}
+
+model Metric {
+  id          String   @id @default(cuid())
+  documentId  String
+  metricId    String
+  value       Float
+  unit        String
+  baseline    Float?
+  confidence  Float
+  sourcePage  Int?
+  createdAt   DateTime @default(now())
+
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}
+
+model Claim {
+  id            String   @id @default(cuid())
+  documentId    String
+  claimText     String   @db.Text
+  claimType     String
+  severity      Float
+  explanation   String?  @db.Text
+  contradictions Json?
+  createdAt     DateTime @default(now())
+
+  document      Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}
+
+model RiskScore {
+  id            String   @id @default(cuid())
+  documentId    String
+  score         Float
+  weightBreakdown Json
+  explanationTree Json
+  industry      String?
+  jurisdiction  String?
+  createdAt     DateTime @default(now())
+
+  document      Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}
+
+model Feedback {
+  id            String   @id @default(cuid())
+  documentId    String
+  originalScore Float
+  correctedScore Float?
+  outcomeLabel  String?
+  userNotes     String?  @db.Text
+  createdAt     DateTime @default(now())
+
+  document      Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+}

@@ -24,43 +24,41 @@ export default function ComparisonCard({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="card-elevated p-8 relative overflow-hidden"
+      transition={{ duration: 0.6 }}
+      className="glass-lg p-8 relative overflow-hidden border border-white/20 hover:border-white/30 transition-all"
     >
-      {/* Background gradient */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary-navy/5 to-transparent rounded-full -mr-32 -mt-32" />
-      
       <div className="relative">
-        <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-2">
-          <span className="w-1 h-8 bg-gradient-to-b from-accent-gold to-accent-600 rounded-full" />
+        <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+          <span className="w-1 h-8 bg-gradient-to-b from-cyan-400 to-cyan-600 rounded-full" />
           Traditional vs SyndicateIQ
         </h3>
 
-        <div className="grid grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {/* Traditional */}
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="p-6 bg-gradient-to-br from-gray-50 to-white rounded-xl border-2 border-gray-200"
+            className="glass-sm p-6 rounded-xl border border-white/15 hover:border-white/25 transition-all"
           >
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-semantic-danger-100 rounded-lg">
-                <X className="text-semantic-danger-600" size={20} />
+              <div className="p-2 bg-red-500/20 rounded-lg border border-red-500/30">
+                <X className="text-red-400" size={20} />
               </div>
-              <span className="font-bold text-gray-900">Traditional</span>
+              <span className="font-bold text-white">Traditional</span>
             </div>
             <div className="space-y-3">
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                <p className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-1">
                   Duration
                 </p>
-                <p className="text-xl font-bold text-gray-900">{traditional.time}</p>
+                <p className="text-xl font-bold text-white">{traditional.time}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                <p className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-1">
                   Cost
                 </p>
-                <p className="text-xl font-bold text-gray-900">{traditional.cost}</p>
+                <p className="text-xl font-bold text-white">{traditional.cost}</p>
               </div>
-              <p className="text-sm text-gray-600 pt-2 border-t border-gray-200">
+              <p className="text-sm text-white/60 pt-2 border-t border-white/10">
                 Manual checks required
               </p>
             </div>
@@ -69,35 +67,35 @@ export default function ComparisonCard({
           {/* SyndicateIQ */}
           <motion.div
             whileHover={{ scale: 1.02 }}
-            className="p-6 bg-gradient-to-br from-semantic-success-50 to-white rounded-xl border-2 border-semantic-success-200 relative overflow-hidden"
+            className="glass-sm p-6 rounded-xl border border-green-500/40 hover:border-green-500/50 relative overflow-hidden transition-all"
           >
             {/* Success badge */}
             <div className="absolute top-4 right-4">
-              <div className="bg-semantic-success-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+              <div className="bg-green-500/20 border border-green-500/30 text-green-400 text-xs font-bold px-3 py-1 rounded-full backdrop-blur-sm">
                 RECOMMENDED
               </div>
             </div>
             
             <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-semantic-success-100 rounded-lg">
-                <Check className="text-semantic-success-600" size={20} />
+              <div className="p-2 bg-green-500/20 rounded-lg border border-green-500/30">
+                <Check className="text-green-400" size={20} />
               </div>
-              <span className="font-bold text-gray-900">SyndicateIQ</span>
+              <span className="font-bold text-white">SyndicateIQ</span>
             </div>
             <div className="space-y-3">
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                <p className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-1">
                   Duration
                 </p>
-                <p className="text-xl font-bold text-gray-900">{syndicateiq.time}</p>
+                <p className="text-xl font-bold text-white">{syndicateiq.time}</p>
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                <p className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-1">
                   Cost
                 </p>
-                <p className="text-xl font-bold text-gray-900">{syndicateiq.cost}</p>
+                <p className="text-xl font-bold text-white">{syndicateiq.cost}</p>
               </div>
-              <p className="text-sm text-gray-600 pt-2 border-t border-gray-200">
+              <p className="text-sm text-white/60 pt-2 border-t border-white/10">
                 Automated verification
               </p>
             </div>
@@ -105,29 +103,29 @@ export default function ComparisonCard({
         </div>
 
         {/* Savings Highlight */}
-        <div className="bg-gradient-to-r from-semantic-success-50 to-semantic-info-50 rounded-xl p-6 border-2 border-semantic-success-200">
-          <div className="flex items-center justify-center gap-8">
+        <div className="glass-sm p-6 rounded-xl border border-green-500/40 hover:border-green-500/50 transition-all">
+          <div className="flex items-center justify-center gap-8 flex-wrap">
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-semantic-success-500 rounded-lg shadow-md">
-                <TrendingDown className="text-white" size={24} />
+              <div className="p-3 bg-green-500/20 border border-green-500/30 rounded-lg backdrop-blur-sm">
+                <TrendingDown className="text-green-400" size={24} />
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                <p className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-1">
                   Cost Savings
                 </p>
-                <p className="text-2xl font-bold text-semantic-success-700">{savings.cost}</p>
+                <p className="text-2xl font-bold text-green-400">{savings.cost}</p>
               </div>
             </div>
-            <div className="w-px h-12 bg-gray-300" />
+            <div className="w-px h-12 bg-white/20" />
             <div className="flex items-center gap-3">
-              <div className="p-3 bg-semantic-info-500 rounded-lg shadow-md">
-                <TrendingUp className="text-white" size={24} />
+              <div className="p-3 bg-cyan-500/20 border border-cyan-500/30 rounded-lg backdrop-blur-sm">
+                <TrendingUp className="text-cyan-400" size={24} />
               </div>
               <div>
-                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+                <p className="text-xs font-semibold text-white/60 uppercase tracking-wider mb-1">
                   Time Saved
                 </p>
-                <p className="text-2xl font-bold text-semantic-info-700">{savings.time}</p>
+                <p className="text-2xl font-bold text-cyan-400">{savings.time}</p>
               </div>
             </div>
           </div>

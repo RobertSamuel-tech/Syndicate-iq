@@ -1,6 +1,7 @@
 import { type ComponentType } from 'react';
 import { motion } from 'framer-motion';
 import type { LucideProps } from 'lucide-react';
+import { cn } from '../../lib/utils/cn';
 
 interface MetricCardProps {
   title: string;
@@ -101,51 +102,51 @@ export default function MetricCard({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -2 }}
-      className={`
-        ${config.bg} ${config.border}
-        ${sizeStyle.padding}
-        rounded-xl border-2
-        shadow-sm hover:shadow-md
-        transition-all duration-300
-        relative overflow-hidden
-      `}
+      whileHover={{ y: -4, scale: 1.02 }}
+      transition={{ duration: 0.6 }}
+      className={cn(
+        'glass-lg',
+        sizeStyle.padding,
+        'relative overflow-hidden',
+        'text-white border border-white/20',
+        'hover:border-white/30 hover:shadow-[0_12px_40px_rgba(0,0,0,0.6)]',
+        'transition-all duration-300',
+        'h-full flex flex-col'
+      )}
     >
-      {/* Decorative gradient overlay */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/20 to-transparent rounded-full -mr-16 -mt-16" />
+      {/* Decorative gradient overlay with glow */}
+      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-cyan-500/20 via-transparent to-transparent rounded-full -mr-20 -mt-20 blur-xl" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/15 to-transparent rounded-full -mr-16 -mt-16" />
       
-      <div className="relative">
+      <div className="relative flex flex-col h-full">
         {/* Header with icon */}
         <div className="flex items-start justify-between mb-4">
-          <h3 className={`${sizeStyle.titleSize} ${config.titleColor} font-semibold uppercase tracking-wider`}>
+          <h3 className={`${sizeStyle.titleSize} text-white/60 font-semibold uppercase tracking-wider`}>
             {title}
           </h3>
           {Icon && (
-            <div className={`
-              ${config.iconBg} ${config.iconColor}
-              p-2 rounded-lg shadow-sm
-            `}>
-              <Icon size={sizeStyle.iconSize} />
+            <div className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg flex-shrink-0">
+              <Icon size={sizeStyle.iconSize} className="text-cyan-400" />
             </div>
           )}
         </div>
 
         {/* Value */}
-        <div className="mb-2">
+        <div className="mb-2 flex-grow">
           <p className={`
-            ${sizeStyle.valueSize} ${config.valueColor}
-            font-bold tracking-tight
+            ${sizeStyle.valueSize}
+            font-bold tracking-tight text-white
           `}>
             {value}
           </p>
         </div>
 
         {/* Subtitle and Trend */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-auto">
           {subtitle && (
-            <p className="text-xs text-gray-600 font-medium">
+            <p className="text-xs text-white/50 font-medium">
               {subtitle}
             </p>
           )}
@@ -153,7 +154,7 @@ export default function MetricCard({
             <div className="flex items-center gap-1">
               <span
                 className={`text-xs font-semibold ${
-                  trend.positive ? 'text-semantic-success-600' : 'text-semantic-danger-600'
+                  trend.positive ? 'text-cyan-400' : 'text-red-400'
                 }`}
               >
                 {trend.positive ? '↑' : '↓'} {trend.value}
