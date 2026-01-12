@@ -17,14 +17,15 @@ export function Navbar() {
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <motion.button
+        <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="p-2 rounded-lg hover:bg-gray-100 transition-colors relative"
         >
-          <Bell className="h-5 w-5 text-gray-600" />
-          <span className="absolute top-1 right-1 w-2 h-2 bg-semantic-danger-500 rounded-full" />
-        </motion.button>
+          <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors relative">
+            <Bell className="h-5 w-5 text-gray-600" />
+            <span className="absolute top-1 right-1 w-2 h-2 bg-semantic-danger-500 rounded-full" />
+          </button>
+        </motion.div>
         <Button variant="ghost" size="sm" className="hidden sm:flex">
           <Settings className="h-4 w-4 mr-2" />
           Settings

@@ -1,4 +1,5 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
+import { Component } from 'react';
+import type { ErrorInfo, ReactNode } from 'react';
 import { AlertTriangle } from 'lucide-react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
@@ -58,7 +59,7 @@ export class ErrorBoundary extends Component<Props, State> {
                 )}
               </div>
               <div className="flex gap-4 justify-center">
-                <Button variant="primary" onClick={this.handleReset}>
+                <Button variant="default" onClick={this.handleReset}>
                   Try Again
                 </Button>
                 <Button variant="outline" onClick={() => window.location.reload()}>

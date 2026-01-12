@@ -13,16 +13,16 @@ export function MainLayout({ children }: MainLayoutProps) {
       <Navbar />
       <div className="flex h-[calc(100vh-73px)]">
         <Sidebar />
-        <motion.main
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
           className="flex-1 overflow-y-auto bg-gray-50/50 backdrop-blur-sm"
         >
-          <div className="min-h-full">
+          <main className="min-h-full">
             {children}
-          </div>
-        </motion.main>
+          </main>
+        </motion.div>
       </div>
     </div>
   );
