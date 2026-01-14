@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { type DueDiligenceCheck, type DueDiligenceReportGuide } from '@/types';
 import { sampleLoans } from '@/lib/data/sampleData';
+import { notificationService } from '@/lib/services/notificationService';
 
 const currencies = [
   { code: "USD", name: "US Dollar" },
@@ -43,11 +44,6 @@ export function DueDiligence() {
   const [elapsedTime, setElapsedTime] = useState(0);
 
   const dueDiligenceChecks: Omit<DueDiligenceCheck, 'timestamp'>[] = [
-    {
-      checkName: 'Credit Risk Assessment',
-      status: 'pending',
-      details: 'Verifying borrower credit rating and financial health'
-    },
     {
       checkName: 'Covenant Compliance',
       status: 'pending',
@@ -112,13 +108,9 @@ export function DueDiligence() {
             ...check,
             status: 'complete',
             result: idx === 0 
-              ? 'pass' as const  // Credit Risk Assessment - PASS
-              : idx === 1 
               ? 'warning' as const  // Covenant Compliance - WARNING
               : 'pass' as const,  // All others - PASS
             details: idx === 0
-              ? 'Borrower credit rating and financial health verified - Approved'
-              : idx === 1
               ? 'Covenant compliance verified - cushion narrowing, recommend monitoring'
               : check.details + ' - Verified',
             timestamp: new Date()
@@ -133,6 +125,12 @@ export function DueDiligence() {
 
         setReport(finalReport);
         setRunning(false);
+        
+        // Add notification when due diligence completes
+        const loan = sampleLoans.find(loan => loan.id === selectedLoan);
+        const loanName = loan?.basicDetails.borrower || selectedLoan;
+        notificationService.addDueDiligenceComplete(loanName);
+        
         return;
       }
 
@@ -151,13 +149,9 @@ export function DueDiligence() {
                 ...check, 
                 status: 'complete' as const,
                 result: checkIndex === 0 
-                  ? 'pass' as const  // Credit Risk Assessment - PASS
-                  : checkIndex === 1 
                   ? 'warning' as const  // Covenant Compliance - WARNING
                   : 'pass' as const,  // All others - PASS
-                details: checkIndex === 0
-                  ? 'Borrower credit rating and financial health verified - Approved'
-                  : checkIndex === 1 
+                details: checkIndex === 0 
                   ? 'Covenant compliance verified - cushion narrowing, recommend monitoring'
                   : check.details + ' - Verified'
               }
@@ -192,7 +186,12 @@ export function DueDiligence() {
           className="relative"
         >
           <div className="relative">
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-3">
+            <h1 
+              className="text-4xl lg:text-5xl font-bold bg-clip-text text-transparent animate-gradient mb-3"
+              style={{
+                backgroundImage: 'linear-gradient(to right, #7dd3fc, #ffffff, #5eead4, #fda4af, #67e8f9)',
+              }}
+            >
               Settlement Due Diligence Accelerator
             </h1>
             <p className="text-lg text-white/60">

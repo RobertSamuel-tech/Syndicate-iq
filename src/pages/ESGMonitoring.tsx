@@ -261,7 +261,12 @@ export function ESGMonitoring() {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-3">
             <Shield className="text-emerald-400" size={32} />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-emerald-200 to-teal-200 bg-clip-text text-transparent">
+            <h1 
+              className="text-4xl font-bold bg-clip-text text-transparent animate-gradient"
+              style={{
+                backgroundImage: 'linear-gradient(to right, #7dd3fc, #ffffff, #5eead4, #fda4af, #67e8f9)',
+              }}
+            >
               ESG Veritas Platform
             </h1>
           </div>
@@ -272,16 +277,131 @@ export function ESGMonitoring() {
                 <span>Last updated: {lastUpdate.toLocaleString()}</span>
               </div>
             )}
-            <Button
+            <motion.button
               onClick={handleManualUpdate}
               disabled={isUpdating}
-              variant="glass"
-              size="sm"
-              className="flex items-center gap-2"
+              whileHover={!isUpdating ? { scale: 1.05 } : {}}
+              whileTap={!isUpdating ? { scale: 0.95 } : {}}
+              className="relative flex items-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: isUpdating 
+                  ? 'linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%)'
+                  : 'linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%)',
+                border: '1px solid rgba(6, 182, 212, 0.3)',
+                backdropFilter: 'blur(12px)',
+              }}
             >
-              <RefreshCw className={isUpdating ? 'animate-spin' : ''} size={16} />
-              {isUpdating ? 'Updating...' : 'Update Now'}
-            </Button>
+              {/* Animated background gradient */}
+              <motion.div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.3) 0%, rgba(16, 185, 129, 0.3) 100%)',
+                }}
+                animate={isUpdating ? {
+                  background: [
+                    'linear-gradient(135deg, rgba(6, 182, 212, 0.4) 0%, rgba(16, 185, 129, 0.4) 100%)',
+                    'linear-gradient(135deg, rgba(16, 185, 129, 0.4) 0%, rgba(6, 182, 212, 0.4) 100%)',
+                    'linear-gradient(135deg, rgba(6, 182, 212, 0.4) 0%, rgba(16, 185, 129, 0.4) 100%)',
+                  ],
+                } : {}}
+                transition={{
+                  duration: 2,
+                  repeat: isUpdating ? Infinity : 0,
+                  ease: 'easeInOut',
+                }}
+              />
+              
+              {/* Shimmer effect */}
+              {!isUpdating && (
+                <motion.div
+                  className="absolute inset-0 -translate-x-full"
+                  style={{
+                    background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent)',
+                  }}
+                  animate={{
+                    x: ['0%', '200%'],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 1,
+                    ease: 'easeInOut',
+                  }}
+                />
+              )}
+
+              {/* Pulsing glow effect */}
+              {isUpdating && (
+                <motion.div
+                  className="absolute inset-0 rounded-lg"
+                  style={{
+                    boxShadow: '0 0 20px rgba(6, 182, 212, 0.5)',
+                  }}
+                  animate={{
+                    boxShadow: [
+                      '0 0 20px rgba(6, 182, 212, 0.5)',
+                      '0 0 30px rgba(16, 185, 129, 0.6)',
+                      '0 0 20px rgba(6, 182, 212, 0.5)',
+                    ],
+                  }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                />
+              )}
+
+              {/* Icon with enhanced animation */}
+              <motion.div
+                className="relative z-10"
+                animate={isUpdating ? {
+                  rotate: 360,
+                } : {}}
+                transition={{
+                  duration: 1,
+                  repeat: isUpdating ? Infinity : 0,
+                  ease: 'linear',
+                }}
+              >
+                <RefreshCw 
+                  size={16} 
+                  className={isUpdating ? 'text-cyan-400' : 'text-cyan-300 group-hover:text-cyan-200'} 
+                />
+              </motion.div>
+
+              {/* Text with smooth transition */}
+              <motion.span
+                className="relative z-10 font-semibold"
+                style={{
+                  color: isUpdating ? 'rgb(34, 211, 238)' : 'rgb(165, 243, 252)',
+                }}
+                animate={isUpdating ? {
+                  opacity: [1, 0.7, 1],
+                } : {}}
+                transition={{
+                  duration: 1.5,
+                  repeat: isUpdating ? Infinity : 0,
+                  ease: 'easeInOut',
+                }}
+              >
+                {isUpdating ? 'Updating...' : 'Update Now'}
+              </motion.span>
+
+              {/* Progress indicator dots */}
+              {isUpdating && (
+                <motion.div
+                  className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-400"
+                  initial={{ width: '0%' }}
+                  animate={{ width: '100%' }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    ease: 'linear',
+                  }}
+                />
+              )}
+            </motion.button>
           </div>
         </div>
         <div className="flex items-center gap-3">
@@ -638,7 +758,9 @@ export function ESGMonitoring() {
                       borderRadius: '0.75rem',
                       color: '#fff'
                     }}
-                    formatter={(value: number, name: string) => {
+                    formatter={(value: number | undefined, name: string | undefined) => {
+                      if (value === undefined) return '';
+                      if (!name) return '';
                       if (name === 'transparencyScore' || name === 'complianceScore') {
                         return [`${value}/100`, name];
                       }

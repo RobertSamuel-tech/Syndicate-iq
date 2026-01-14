@@ -13,8 +13,9 @@ import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
 import { generateHashSync } from '@/lib/utils/generateHash';
 import { extractPdfText } from '@/lib/utils/pdfExtractor';
-import { extractESGMetrics } from '@/lib/services/esgExtractor';
+import { extractESGMetrics, type ExtractedESGMetric } from '@/lib/services/esgExtractor';
 import { compareClaimedVsVerified, mapLMACompliance, convertToVerificationData, simulateThirdPartyVerification, generateVerificationSources } from '@/lib/services/esgVerificationEngine';
+import { notificationService } from '@/lib/services/notificationService';
 
 type ProcessingStep = 'idle' | 'uploading' | 'processing' | 'validating' | 'verifying' | 'detecting' | 'mapping' | 'scoring' | 'complete';
 
@@ -138,26 +139,100 @@ export function ESGVeritas() {
       
       // Convert to display format
       const extractedMetricsDisplay: Record<string, unknown> = {};
+      
+      // Helper function to format metric value
+      const formatMetricValue = (metric: ExtractedESGMetric | null, defaultUnit?: string): string | null => {
+        if (!metric) return null;
+        const value = metric.value;
+        if (typeof value === 'string') {
+          return value; // Return string values like 'Present' as-is
+        }
+        const unit = metric.unit || defaultUnit || '';
+        return `${value}${unit ? ` ${unit}` : ''}`;
+      };
+      
+      // Carbon Emissions
       if (extractedESG.carbonEmissions.scope1) {
-        extractedMetricsDisplay.scope1 = extractedESG.carbonEmissions.scope1.value;
+        const formatted = formatMetricValue(extractedESG.carbonEmissions.scope1);
+        if (formatted) extractedMetricsDisplay['Scope 1 Emissions'] = formatted;
       }
       if (extractedESG.carbonEmissions.scope2) {
-        extractedMetricsDisplay.scope2 = extractedESG.carbonEmissions.scope2.value;
+        const formatted = formatMetricValue(extractedESG.carbonEmissions.scope2);
+        if (formatted) extractedMetricsDisplay['Scope 2 Emissions'] = formatted;
       }
       if (extractedESG.carbonEmissions.scope3) {
-        extractedMetricsDisplay.scope3 = extractedESG.carbonEmissions.scope3.value;
+        const formatted = formatMetricValue(extractedESG.carbonEmissions.scope3);
+        if (formatted) extractedMetricsDisplay['Scope 3 Emissions'] = formatted;
       }
+      
+      // Renewable Energy
       if (extractedESG.renewableEnergy.percentage) {
-        extractedMetricsDisplay.renewableEnergy = extractedESG.renewableEnergy.percentage.value;
+        const formatted = formatMetricValue(extractedESG.renewableEnergy.percentage, '%');
+        if (formatted) extractedMetricsDisplay['Renewable Energy %'] = formatted;
       }
+      if (extractedESG.renewableEnergy.totalMWh) {
+        const formatted = formatMetricValue(extractedESG.renewableEnergy.totalMWh);
+        if (formatted) extractedMetricsDisplay['Renewable Energy (MWh)'] = formatted;
+      }
+      
+      // Water Usage
       if (extractedESG.waterUsage.totalLiters) {
-        extractedMetricsDisplay.waterUsage = extractedESG.waterUsage.totalLiters.value;
+        const formatted = formatMetricValue(extractedESG.waterUsage.totalLiters);
+        if (formatted) extractedMetricsDisplay['Water Usage'] = formatted;
       }
+      if (extractedESG.waterUsage.recycledPercentage) {
+        const formatted = formatMetricValue(extractedESG.waterUsage.recycledPercentage, '%');
+        if (formatted) extractedMetricsDisplay['Water Recycled %'] = formatted;
+      }
+      
+      // Waste Recycling
       if (extractedESG.wasteRecycling.rate) {
-        extractedMetricsDisplay.wasteRecycling = extractedESG.wasteRecycling.rate.value;
+        const formatted = formatMetricValue(extractedESG.wasteRecycling.rate, '%');
+        if (formatted) extractedMetricsDisplay['Waste Recycling Rate'] = formatted;
       }
+      
+      // Diversity
       if (extractedESG.diversity.womenInLeadership) {
-        extractedMetricsDisplay.diversity = extractedESG.diversity.womenInLeadership.value;
+        const formatted = formatMetricValue(extractedESG.diversity.womenInLeadership, '%');
+        if (formatted) extractedMetricsDisplay['Women in Leadership %'] = formatted;
+      }
+      if (extractedESG.diversity.boardDiversity) {
+        const formatted = formatMetricValue(extractedESG.diversity.boardDiversity, '%');
+        if (formatted) extractedMetricsDisplay['Board Diversity %'] = formatted;
+      }
+      
+      // Safety
+      if (extractedESG.safety.incidents) {
+        const formatted = formatMetricValue(extractedESG.safety.incidents);
+        if (formatted) extractedMetricsDisplay['Safety Incidents'] = formatted;
+      }
+      if (extractedESG.safety.lostTimeRate) {
+        const formatted = formatMetricValue(extractedESG.safety.lostTimeRate);
+        if (formatted) extractedMetricsDisplay['Lost Time Rate'] = formatted;
+      }
+      
+      // Community
+      if (extractedESG.community.investment) {
+        const formatted = formatMetricValue(extractedESG.community.investment);
+        if (formatted) extractedMetricsDisplay['Community Investment'] = formatted;
+      }
+      if (extractedESG.community.volunteerHours) {
+        const formatted = formatMetricValue(extractedESG.community.volunteerHours);
+        if (formatted) extractedMetricsDisplay['Volunteer Hours'] = formatted;
+      }
+      
+      // Metadata
+      if (extractedESG.metadata.companyName) {
+        extractedMetricsDisplay['Company Name'] = extractedESG.metadata.companyName;
+      }
+      if (extractedESG.metadata.reportingYear) {
+        extractedMetricsDisplay['Reporting Year'] = extractedESG.metadata.reportingYear;
+      }
+      if (extractedESG.metadata.geography) {
+        extractedMetricsDisplay['Geography'] = extractedESG.metadata.geography;
+      }
+      if (extractedESG.metadata.documentType) {
+        extractedMetricsDisplay['Document Type'] = extractedESG.metadata.documentType;
       }
       
       setExtractedMetrics(extractedMetricsDisplay);
@@ -413,6 +488,10 @@ export function ESGVeritas() {
         alertsCount: alerts.length,
         completeness: extractedESG.metadata.completeness
       });
+      
+      // Add notification when ESG Veritas completes
+      const loanName = result.borrowerName || sampleLoans.find(l => l.id === selectedLoan)?.basicDetails.borrower || selectedLoan;
+      notificationService.addESGVeritasComplete(loanName);
     } catch (error) {
       if (processingTimer) clearInterval(processingTimer);
       setError(error instanceof Error ? error.message : 'Failed to process document');
@@ -453,7 +532,14 @@ export function ESGVeritas() {
         transition={{ duration: 0.6 }}
       >
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-3">ESG Veritas Platform</h1>
+          <h1 
+            className="text-4xl font-bold bg-clip-text text-transparent animate-gradient mb-3"
+            style={{
+              backgroundImage: 'linear-gradient(to right, #7dd3fc, #ffffff, #5eead4, #fda4af, #67e8f9)',
+            }}
+          >
+            ESG Veritas Platform
+          </h1>
           <p className="text-lg text-white/60">
             AI-powered ESG verification and greenwashing detection aligned with LMA Green Loan Terms
           </p>
@@ -718,43 +804,47 @@ export function ESGVeritas() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {Object.entries(extractedMetrics).slice(0, 8).map(([key, value]) => (
-                      <div key={key} className="glass-sm p-3 rounded-lg border border-white/15 hover:border-white/25 transition-all">
-                        <p className="text-xs text-white/60 uppercase tracking-wide mb-1">{key.replace(/([A-Z])/g, ' $1').trim()}</p>
-                        <p className="text-lg font-semibold text-white">
-                          {typeof value === 'object' ? JSON.stringify(value).slice(0, 20) + '...' : String(value)}
-                        </p>
-                      </div>
-                    ))}
-        </div>
+                  {Object.keys(extractedMetrics).length > 0 ? (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {Object.entries(extractedMetrics).slice(0, 8).map(([key, value]) => (
+                        <div key={key} className="glass-sm p-3 rounded-lg border border-white/15 hover:border-white/25 transition-all">
+                          <p className="text-xs text-white/60 uppercase tracking-wide mb-1">{key.replace(/([A-Z])/g, ' $1').trim()}</p>
+                          <p className="text-lg font-semibold text-white">
+                            {typeof value === 'object' ? JSON.stringify(value).slice(0, 20) + '...' : String(value)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-white/60">No ESG metrics were extracted from the document.</p>
+                      <p className="text-white/40 text-sm mt-2">The document may not contain extractable ESG data.</p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
           )}
 
           {/* Main Results Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             {/* Risk Score Gauge */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
+              className="lg:col-span-1"
             >
-              <Card className="p-6">
-                <CardHeader>
-                  <CardTitle className="text-lg font-semibold text-white mb-4">Overall Risk Score</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex justify-center">
-                    <RiskGauge
-                      score={verificationResult.riskScore.overall}
-                      label={`${verificationResult.riskScore.level.toUpperCase()} RISK`}
-                      size="lg"
-                    />
-        </div>
-                </CardContent>
-              </Card>
+              <div className="p-6">
+                <h3 className="text-lg font-semibold text-white mb-4">Overall Risk Score</h3>
+                <div className="flex justify-start">
+                  <RiskGauge
+                    score={verificationResult.riskScore.overall}
+                    label={`${verificationResult.riskScore.level.toUpperCase()} RISK`}
+                    size="lg"
+                  />
+                </div>
+              </div>
             </motion.div>
 
             {/* Component Scores */}
@@ -762,51 +852,48 @@ export function ESGVeritas() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
+              className="lg:col-span-3"
             >
-              <div className="lg:col-span-2">
               <Card className="p-6">
                 <CardHeader>
                   <CardTitle className="text-lg font-semibold text-white mb-4">Risk Score Breakdown</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b border-white/10">
-                          <th className="text-left py-3 px-4 text-sm font-semibold text-white/60 uppercase tracking-wider">Component</th>
-                          <th className="text-left py-3 px-4 text-sm font-semibold text-white/60 uppercase tracking-wider">Score</th>
-                          <th className="text-left py-3 px-4 text-sm font-semibold text-white/60 uppercase tracking-wider">Weight</th>
-                          <th className="text-left py-3 px-4 text-sm font-semibold text-white/60 uppercase tracking-wider">Weighted Score</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {verificationResult.riskScore.breakdown.map((component) => (
-                          <tr key={component.component} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                            <td className="py-3 px-4 text-white font-medium">{component.component}</td>
-                            <td className="py-3 px-4">
-                              <div className="flex items-center gap-2">
-                                <span className="text-white/80">{component.score.toFixed(0)}/100</span>
-                                <div className="w-24 bg-white/10 rounded-full h-2">
-                                  <div
-                                    className={`h-2 rounded-full ${
-                                      component.score < 30 ? 'bg-green-400' :
-                                      component.score < 60 ? 'bg-amber-400' : 'bg-red-400'
-                                    }`}
-                                    style={{ width: `${component.score}%` }}
-                                  />
-                                </div>
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-white/10">
+                        <th className="text-left py-3 px-4 text-sm font-semibold text-white/60 uppercase tracking-wider">Component</th>
+                        <th className="text-left py-3 px-4 text-sm font-semibold text-white/60 uppercase tracking-wider">Score</th>
+                        <th className="text-left py-3 px-4 text-sm font-semibold text-white/60 uppercase tracking-wider">Weight</th>
+                        <th className="text-left py-3 px-4 text-sm font-semibold text-white/60 uppercase tracking-wider">Weighted Score</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {verificationResult.riskScore.breakdown.map((component) => (
+                        <tr key={component.component} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                          <td className="py-3 px-4 text-white font-medium">{component.component}</td>
+                          <td className="py-3 px-4">
+                            <div className="flex items-center gap-2">
+                              <span className="text-white/80 whitespace-nowrap">{component.score.toFixed(0)}/100</span>
+                              <div className="flex-1 max-w-20 bg-white/10 rounded-full h-2">
+                                <div
+                                  className={`h-2 rounded-full ${
+                                    component.score < 30 ? 'bg-green-400' :
+                                    component.score < 60 ? 'bg-amber-400' : 'bg-red-400'
+                                  }`}
+                                  style={{ width: `${component.score}%` }}
+                                />
                               </div>
-                            </td>
-                            <td className="py-3 px-4 text-white/80">{(component.weight * 100).toFixed(0)}%</td>
-                            <td className="py-3 px-4 text-white font-semibold">{component.weightedScore.toFixed(1)}</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                            </div>
+                          </td>
+                          <td className="py-3 px-4 text-white/80 whitespace-nowrap">{(component.weight * 100).toFixed(0)}%</td>
+                          <td className="py-3 px-4 text-white font-semibold whitespace-nowrap">{component.weightedScore.toFixed(1)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </CardContent>
               </Card>
-            </div>
             </motion.div>
           </div>
 

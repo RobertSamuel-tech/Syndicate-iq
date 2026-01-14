@@ -9,6 +9,7 @@ import { type LoanDocument } from '@/types';
 import { extractPdfText } from '@/lib/utils/pdfExtractor';
 import { parseDocumentLocally } from '@/lib/services/localDocumentParser';
 import { analyzeESG, type ESGResult } from '@/lib/utils/esgAnalyzer';
+import { notificationService } from '@/lib/services/notificationService';
 
 export function DocumentProcessing() {
   const [processing, setProcessing] = useState(false);
@@ -126,6 +127,9 @@ export function DocumentProcessing() {
       setExtractedData(parseResult.data);
       setProcessing(false);
       setProcessingStage('');
+      
+      // Add notification when document processing completes
+      notificationService.addDocumentProcessingComplete(file.name);
     } catch (err) {
       clearInterval(timer);
       setProcessing(false);
@@ -164,7 +168,14 @@ export function DocumentProcessing() {
         transition={{ duration: 0.6 }}
         className="mb-8"
       >
-        <h1 className="text-4xl font-bold text-white mb-3">Document Intelligence Engine</h1>
+        <h1 
+          className="text-4xl font-bold bg-clip-text text-transparent animate-gradient mb-3"
+          style={{
+            backgroundImage: 'linear-gradient(to right, #7dd3fc, #ffffff, #5eead4, #fda4af, #67e8f9)',
+          }}
+        >
+          Document Intelligence Engine
+        </h1>
         <p className="text-lg text-white/60">
           Upload loan agreements for instant AI-powered extraction (99% faster than manual review)
         </p>

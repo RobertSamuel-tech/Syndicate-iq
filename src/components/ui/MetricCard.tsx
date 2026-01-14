@@ -104,54 +104,142 @@ export default function MetricCard({
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -4, scale: 1.02 }}
+      whileHover={{ y: -6, scale: 1.02 }}
       transition={{ duration: 0.6 }}
       className={cn(
-        'glass-lg',
         sizeStyle.padding,
         'relative overflow-hidden',
-        'text-white border border-white/20',
-        'hover:border-white/30 hover:shadow-[0_12px_40px_rgba(0,0,0,0.6)]',
-        'transition-all duration-300',
-        'h-full flex flex-col'
+        'h-full flex flex-col',
+        'group'
       )}
+      style={{
+        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%)',
+        backdropFilter: 'blur(20px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        border: '1px solid rgba(255, 255, 255, 0.18)',
+        borderRadius: '1.25rem',
+        boxShadow: `
+          0 8px 32px rgba(0, 0, 0, 0.5),
+          0 2px 8px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.05)
+        `,
+      }}
     >
-      {/* Decorative gradient overlay with glow */}
-      <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-cyan-500/20 via-transparent to-transparent rounded-full -mr-20 -mt-20 blur-xl" />
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/15 to-transparent rounded-full -mr-16 -mt-16" />
+      {/* Animated gradient overlay - top right corner */}
+      <motion.div
+        className="absolute top-0 right-0 w-48 h-48 rounded-full blur-2xl opacity-40"
+        style={{
+          background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.4) 0%, rgba(16, 185, 129, 0.3) 50%, rgba(147, 51, 234, 0.2) 100%)',
+        }}
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
       
-      <div className="relative flex flex-col h-full">
+      {/* Secondary glow effect */}
+      <motion.div
+        className="absolute top-0 right-0 w-32 h-32 rounded-full blur-xl opacity-30"
+        style={{
+          background: 'radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%)',
+        }}
+        animate={{
+          scale: [1, 1.3, 1],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: 'easeInOut',
+        }}
+      />
+
+      {/* Top highlight line */}
+      <div
+        className="absolute top-0 left-0 right-0 h-px opacity-50"
+        style={{
+          background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4) 50%, transparent)',
+        }}
+      />
+
+      {/* Animated shimmer effect on hover */}
+      <motion.div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%)',
+          transform: 'translateX(-100%)',
+        }}
+        animate={{
+          x: ['-100%', '200%'],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          repeatDelay: 1,
+          ease: 'linear',
+        }}
+      />
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col h-full">
         {/* Header with icon */}
         <div className="flex items-start justify-between mb-4">
-          <h3 className={`${sizeStyle.titleSize} text-white/60 font-semibold uppercase tracking-wider`}>
+          <h3 className={`${sizeStyle.titleSize} text-white/70 font-semibold uppercase tracking-wider group-hover:text-white/90 transition-colors`}>
             {title}
           </h3>
           {Icon && (
-            <div className="p-2.5 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-lg flex-shrink-0">
-              <Icon size={sizeStyle.iconSize} className="text-cyan-400" />
-            </div>
+            <motion.div
+              className="p-2.5 rounded-xl flex-shrink-0 relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.2) 0%, rgba(16, 185, 129, 0.15) 100%)',
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+                border: '1px solid rgba(6, 182, 212, 0.3)',
+                boxShadow: '0 4px 16px rgba(6, 182, 212, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+              }}
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              transition={{ duration: 0.2 }}
+            >
+              {/* Icon glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/20 to-teal-400/20 rounded-xl blur-sm" />
+              <Icon size={sizeStyle.iconSize} className="text-cyan-400 relative z-10 drop-shadow-lg" />
+            </motion.div>
           )}
         </div>
 
         {/* Value */}
         <div className="mb-2 flex-grow">
-          <p className={`
-            ${sizeStyle.valueSize}
-            font-bold tracking-tight text-white
-          `}>
+          <motion.p
+            className={`
+              ${sizeStyle.valueSize}
+              font-bold tracking-tight text-white
+              drop-shadow-lg
+            `}
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
             {value}
-          </p>
+          </motion.p>
         </div>
 
         {/* Subtitle and Trend */}
         <div className="flex items-center justify-between mt-auto">
           {subtitle && (
-            <p className="text-xs text-white/50 font-medium">
+            <p className="text-xs text-white/60 font-medium group-hover:text-white/80 transition-colors">
               {subtitle}
             </p>
           )}
           {trend && (
-            <div className="flex items-center gap-1">
+            <motion.div
+              className="flex items-center gap-1"
+              whileHover={{ scale: 1.1 }}
+            >
               <span
                 className={`text-xs font-semibold ${
                   trend.positive ? 'text-cyan-400' : 'text-red-400'
@@ -159,10 +247,19 @@ export default function MetricCard({
               >
                 {trend.positive ? '↑' : '↓'} {trend.value}
               </span>
-            </div>
+            </motion.div>
           )}
         </div>
       </div>
+
+      {/* Bottom border glow on hover */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{
+          background: 'linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.6) 50%, transparent)',
+          boxShadow: '0 0 10px rgba(6, 182, 212, 0.4)',
+        }}
+      />
     </motion.div>
   );
 }

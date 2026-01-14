@@ -18,7 +18,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       <Navbar />
       <div className="flex h-[calc(100vh-73px)] relative z-10">
         <Sidebar />
-        <div className="flex-1 overflow-y-auto relative">
+        <div className="flex-1 overflow-y-auto relative pl-4">
           <motion.main
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

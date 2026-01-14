@@ -335,6 +335,18 @@
   .gradient-text-gold {
     @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-gold to-accent-600;
   }
+
+  /* Neon white glow effect for text */
+  .text-neon-white {
+    color: #ffffff;
+    text-shadow: 
+      0 0 5px rgba(255, 255, 255, 0.8),
+      0 0 10px rgba(255, 255, 255, 0.6),
+      0 0 15px rgba(255, 255, 255, 0.5),
+      0 0 20px rgba(255, 255, 255, 0.4),
+      0 0 35px rgba(255, 255, 255, 0.3),
+      0 0 40px rgba(255, 255, 255, 0.2);
+  }
 }
 
 @layer utilities {
@@ -427,6 +439,10 @@
   }
   .animation-delay-75 {
     animation-delay: 75ms;
+  }
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-shift 4s ease infinite;
   }
 }
 
@@ -653,5 +669,29 @@
   100% {
     transform: scale(1.5);
     opacity: 0;
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

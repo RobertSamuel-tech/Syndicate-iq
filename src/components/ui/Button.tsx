@@ -84,7 +84,7 @@ function Button({
       whileTap={{ scale: 0.98 }}
       className={cn(buttonVariants({ variant, size, className }))}
       disabled={disabled || loading}
-      {...props}
+      {...(props as any)}
     >
       {loading && (
         <span className="absolute inset-0 flex items-center justify-center bg-inherit">

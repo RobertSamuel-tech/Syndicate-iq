@@ -193,6 +193,13 @@ function extractEmissions(text: string): {
   const scope2 = extractNumericValue(text, scope2Patterns);
   const scope3 = extractNumericValue(text, scope3Patterns);
   
+  // Check for section mentions even without values
+  const hasCarbonEmissionsSection = /carbon\s+emissions?\s+(?:reduction|reporting|data|metrics?)/i.test(text) || 
+                                     /emissions?\s+(?:reduction|reporting|data|metrics?)/i.test(text);
+  const hasScope1Mention = /scope\s*1/i.test(text) || /direct\s+emissions?/i.test(text);
+  const hasScope2Mention = /scope\s*2/i.test(text) || /indirect\s+emissions?/i.test(text);
+  const hasScope3Mention = /scope\s*3/i.test(text) || /value\s+chain\s+emissions?/i.test(text);
+  
   // Extract unit (default to tCO2e)
   const unitMatch = text.match(/(tco2e|t\s*co2e|tons?|mt\s*co2e)/i);
   const unit = unitMatch ? unitMatch[1] : 'tCO2e';
@@ -208,21 +215,39 @@ function extractEmissions(text: string): {
       status: 'found',
       confidence: 'high',
       source: scope1.source,
-    } : null,
+    } : (hasScope1Mention || hasCarbonEmissionsSection ? {
+      value: 'Present',
+      unit: unit,
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
     scope2: scope2 ? {
       value: scope2.value,
       unit: scope2.unit || unit,
       status: 'found',
       confidence: 'high',
       source: scope2.source,
-    } : null,
+    } : (hasScope2Mention || hasCarbonEmissionsSection ? {
+      value: 'Present',
+      unit: unit,
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
     scope3: scope3 ? {
       value: scope3.value,
       unit: scope3.unit || unit,
       status: 'found',
       confidence: 'high',
       source: scope3.source,
-    } : null,
+    } : (hasScope3Mention || hasCarbonEmissionsSection ? {
+      value: 'Present',
+      unit: unit,
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
     unit,
     baselineYear,
   };
@@ -251,6 +276,10 @@ function extractRenewableEnergy(text: string): {
   const percentage = extractNumericValue(text, percentagePatterns);
   const totalMWh = extractNumericValue(text, mwhPatterns);
   
+  // Check for section mentions even without values
+  const hasRenewableEnergySection = /renewable\s+energy\s+(?:usage|consumption|reporting|data|metrics?)/i.test(text) ||
+                                     /renewable\s+energy/i.test(text);
+  
   return {
     percentage: percentage ? {
       value: percentage.value,
@@ -258,14 +287,26 @@ function extractRenewableEnergy(text: string): {
       status: 'found',
       confidence: 'high',
       source: percentage.source,
-    } : null,
+    } : (hasRenewableEnergySection ? {
+      value: 'Present',
+      unit: '%',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
     totalMWh: totalMWh ? {
       value: totalMWh.value,
       unit: 'MWh',
       status: 'found',
       confidence: 'high',
       source: totalMWh.source,
-    } : null,
+    } : (hasRenewableEnergySection ? {
+      value: 'Present',
+      unit: 'MWh',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
   };
 }
 
@@ -289,6 +330,10 @@ function extractWaterUsage(text: string): {
   const total = extractNumericValue(text, totalPatterns);
   const recycled = extractNumericValue(text, recycledPatterns);
   
+  // Check for section mentions even without values
+  const hasWaterSection = /water\s+(?:usage|consumption|reduction|management|reporting|data|metrics?)/i.test(text) ||
+                          /water\s+reduction/i.test(text);
+  
   // Convert to liters if needed
   let totalValue = total?.value || null;
   if (total && total.unit && (total.unit.includes('million') || total.unit.includes('m'))) {
@@ -302,14 +347,26 @@ function extractWaterUsage(text: string): {
       status: 'found',
       confidence: 'high',
       source: total?.source,
-    } : null,
+    } : (hasWaterSection ? {
+      value: 'Present',
+      unit: 'liters',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
     recycledPercentage: recycled ? {
       value: recycled.value,
       unit: '%',
       status: 'found',
       confidence: 'high',
       source: recycled.source,
-    } : null,
+    } : (hasWaterSection ? {
+      value: 'Present',
+      unit: '%',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
   };
 }
 
@@ -327,6 +384,10 @@ function extractWasteRecycling(text: string): {
   
   const result = extractNumericValue(text, patterns);
   
+  // Check for section mentions even without values
+  const hasWasteSection = /waste\s+(?:recycling|reduction|management|reporting|data|metrics?)/i.test(text) ||
+                          /waste\s+recycling/i.test(text);
+  
   return {
     rate: result ? {
       value: result.value,
@@ -334,7 +395,13 @@ function extractWasteRecycling(text: string): {
       status: 'found',
       confidence: 'high',
       source: result.source,
-    } : null,
+    } : (hasWasteSection ? {
+      value: 'Present',
+      unit: '%',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
   };
 }
 
@@ -359,6 +426,11 @@ function extractDiversity(text: string): {
   const women = extractNumericValue(text, womenPatterns);
   const board = extractNumericValue(text, boardPatterns);
   
+  // Check for section mentions even without values
+  const hasDiversitySection = /(?:gender\s+)?diversity/i.test(text) ||
+                              /women\s+in\s+leadership/i.test(text) ||
+                              /gender\s+diversity/i.test(text);
+  
   return {
     womenInLeadership: women ? {
       value: women.value,
@@ -366,14 +438,26 @@ function extractDiversity(text: string): {
       status: 'found',
       confidence: 'high',
       source: women.source,
-    } : null,
+    } : (hasDiversitySection ? {
+      value: 'Present',
+      unit: '%',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
     boardDiversity: board ? {
       value: board.value,
       unit: '%',
       status: 'found',
       confidence: 'high',
       source: board.source,
-    } : null,
+    } : (hasDiversitySection ? {
+      value: 'Present',
+      unit: '%',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
   };
 }
 
@@ -397,6 +481,10 @@ function extractSafety(text: string): {
   const incidents = extractNumericValue(text, incidentPatterns);
   const ltr = extractNumericValue(text, ltrPatterns);
   
+  // Check for section mentions even without values
+  const hasSafetySection = /safety\s+(?:incidents?|reporting|data|metrics?)/i.test(text) ||
+                           /safety\s+incidents/i.test(text);
+  
   return {
     incidents: incidents ? {
       value: incidents.value,
@@ -404,14 +492,26 @@ function extractSafety(text: string): {
       status: 'found',
       confidence: 'high',
       source: incidents.source,
-    } : null,
+    } : (hasSafetySection ? {
+      value: 'Present',
+      unit: 'count',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
     lostTimeRate: ltr ? {
       value: ltr.value,
       unit: 'per 200k hours',
       status: 'found',
       confidence: 'high',
       source: ltr.source,
-    } : null,
+    } : (hasSafetySection ? {
+      value: 'Present',
+      unit: 'per 200k hours',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
   };
 }
 
@@ -435,6 +535,10 @@ function extractCommunity(text: string): {
   const investment = extractNumericValue(text, investmentPatterns);
   const volunteer = extractNumericValue(text, volunteerPatterns);
   
+  // Check for section mentions even without values
+  const hasCommunitySection = /community\s+(?:investment|reporting|data|metrics?)/i.test(text) ||
+                              /community\s+investment/i.test(text);
+  
   return {
     investment: investment ? {
       value: investment.value,
@@ -442,14 +546,26 @@ function extractCommunity(text: string): {
       status: 'found',
       confidence: 'high',
       source: investment.source,
-    } : null,
+    } : (hasCommunitySection ? {
+      value: 'Present',
+      unit: 'USD',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
     volunteerHours: volunteer ? {
       value: volunteer.value,
       unit: 'hours',
       status: 'found',
       confidence: 'high',
       source: volunteer.source,
-    } : null,
+    } : (hasCommunitySection ? {
+      value: 'Present',
+      unit: 'hours',
+      status: 'partial',
+      confidence: 'medium',
+      source: 'Section mentioned in document',
+    } : null),
   };
 }
 
@@ -491,9 +607,10 @@ function extractClaimedImprovements(text: string): Array<{
  * Extracts document metadata
  */
 function extractMetadata(text: string): ExtractedESGMetrics['metadata'] {
-  // Company name
+  // Company name - enhanced patterns
   const companyPatterns = [
-    /(?:company|borrower|organization)[:\s]+([A-Z][A-Za-z\s&,\.]+(?:Inc|Corp|Ltd|LLC|PLC|AG|SA|Co|Company))/i,
+    /(?:company|borrower|organization)[:\s]+([A-Z][A-Za-z\s&,\.]+(?:Inc|Corp|Ltd|LLC|PLC|AG|SA|Co|Company|Limited))/i,
+    /company[:\s]+([A-Z][A-Za-z\s&,\.]+(?:Inc|Corp|Ltd|LLC|PLC|AG|SA|Co|Company|Limited))/i,
   ];
   let companyName: string | null = null;
   for (const pattern of companyPatterns) {
@@ -504,10 +621,20 @@ function extractMetadata(text: string): ExtractedESGMetrics['metadata'] {
     }
   }
   
-  // Reporting year
-  const yearPattern = /(?:reporting|fiscal|year)[:\s]+(\d{4})/i;
-  const yearMatch = text.match(yearPattern);
-  const reportingYear = yearMatch ? parseInt(yearMatch[1]) : null;
+  // Reporting year - enhanced patterns including "Period: FY 2025" format
+  const yearPatterns = [
+    /(?:reporting|fiscal|year|period)[:\s]+(?:fy\s*)?(\d{4})/i,
+    /(?:reporting|fiscal|year)[:\s]+(\d{4})/i,
+    /period[:\s]+(?:fy\s*)?(\d{4})/i,
+  ];
+  let reportingYear: number | null = null;
+  for (const pattern of yearPatterns) {
+    const yearMatch = text.match(pattern);
+    if (yearMatch) {
+      reportingYear = parseInt(yearMatch[1]);
+      break;
+    }
+  }
   
   // Geography
   const geoPatterns = [/country[:\s]+([A-Z][a-z]+)/i, /location[:\s]+([A-Z][a-z]+)/i];

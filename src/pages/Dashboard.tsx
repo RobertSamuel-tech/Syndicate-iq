@@ -73,7 +73,12 @@ export function Dashboard() {
           className="relative"
         >
           <div className="relative">
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-3">
+            <h1 
+              className="text-4xl lg:text-5xl font-bold bg-clip-text text-transparent animate-gradient mb-3"
+              style={{
+                backgroundImage: 'linear-gradient(to right, #7dd3fc, #ffffff, #5eead4, #fda4af, #67e8f9)',
+              }}
+            >
               Portfolio Intelligence Hub
             </h1>
             <p className="text-lg text-white/60">

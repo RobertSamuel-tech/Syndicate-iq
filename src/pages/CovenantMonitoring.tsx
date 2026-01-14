@@ -37,7 +37,12 @@ export function CovenantMonitoring() {
       >
         <div className="flex items-center gap-3 mb-3">
           <Shield className="text-cyan-400" size={32} />
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-cyan-200 to-teal-200 bg-clip-text text-transparent">
+          <h1 
+            className="text-4xl font-bold bg-clip-text text-transparent animate-gradient"
+            style={{
+              backgroundImage: 'linear-gradient(to right, #7dd3fc, #ffffff, #5eead4, #fda4af, #67e8f9)',
+            }}
+          >
             Covenant Guardian
           </h1>
         </div>
@@ -119,20 +124,19 @@ export function CovenantMonitoring() {
       </motion.div>
 
       {/* Main Monitoring Dashboard */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 items-stretch">
         {/* Risk Gauge */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
+          className="w-full h-full flex items-center justify-center"
         >
-          <Card className="p-6 flex items-center justify-center">
-            <RiskGauge
-              score={selectedLoan.riskScore}
-              label="Overall Risk Score"
-              size="md"
-            />
-          </Card>
+          <RiskGauge
+            score={selectedLoan.riskScore}
+            label="Overall Risk Score"
+            size="md"
+          />
         </motion.div>
 
         {/* Breach Prediction */}
@@ -140,27 +144,147 @@ export function CovenantMonitoring() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
+          className="h-full"
         >
-          <Card>
+          <Card className="h-full flex flex-col">
             <CardHeader>
               <CardTitle className="text-white text-lg">Breach Prediction</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1">
               <div className="space-y-4">
                 <div>
-                  <p className="text-sm text-white/60 mb-2">Probability</p>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 bg-white/10 rounded-full h-3 overflow-hidden">
-                      <div
-                        className={`h-3 rounded-full transition-all ${
-                          selectedLoan.breachProbability > 50 ? 'bg-red-500' : 'bg-amber-500'
-                        }`}
-                        style={{ width: `${selectedLoan.breachProbability}%` }}
-                      />
+                  <p className="text-sm text-white/60 mb-3">Probability</p>
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 relative">
+                      {/* Background track */}
+                      <div className="w-full bg-white/5 rounded-full h-4 overflow-hidden backdrop-blur-sm border border-white/10">
+                        {/* Animated multicolor progress bar */}
+                        <motion.div
+                          className="h-4 rounded-full relative overflow-hidden"
+                          initial={{ width: 0 }}
+                          animate={{ width: `${selectedLoan.breachProbability}%` }}
+                          transition={{ duration: 1.5, ease: [0.4, 0, 0.2, 1] }}
+                        >
+                          {/* Base gradient */}
+                          <motion.div
+                            className="absolute inset-0"
+                            style={{
+                              background: selectedLoan.breachProbability > 50
+                                ? 'linear-gradient(90deg, #EF4444 0%, #F87171 50%, #DC2626 100%)'
+                                : 'linear-gradient(90deg, #F59E0B 0%, #FBBF24 50%, #D97706 100%)',
+                            }}
+                            animate={{
+                              background: selectedLoan.breachProbability > 50
+                                ? [
+                                    'linear-gradient(90deg, #EF4444 0%, #F87171 50%, #DC2626 100%)',
+                                    'linear-gradient(90deg, #DC2626 0%, #EF4444 50%, #F87171 100%)',
+                                    'linear-gradient(90deg, #F87171 0%, #DC2626 50%, #EF4444 100%)',
+                                    'linear-gradient(90deg, #EF4444 0%, #F87171 50%, #DC2626 100%)',
+                                  ]
+                                : [
+                                    'linear-gradient(90deg, #F59E0B 0%, #FBBF24 50%, #D97706 100%)',
+                                    'linear-gradient(90deg, #D97706 0%, #F59E0B 50%, #FBBF24 100%)',
+                                    'linear-gradient(90deg, #FBBF24 0%, #D97706 50%, #F59E0B 100%)',
+                                    'linear-gradient(90deg, #F59E0B 0%, #FBBF24 50%, #D97706 100%)',
+                                  ],
+                            }}
+                            transition={{
+                              duration: 3,
+                              repeat: Infinity,
+                              ease: 'linear',
+                            }}
+                          />
+
+                          {/* Animated shimmer overlay */}
+                          <motion.div
+                            className="absolute inset-0"
+                            style={{
+                              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%)',
+                              backgroundSize: '200% 100%',
+                            }}
+                            animate={{
+                              backgroundPosition: ['-200%', '200%'],
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              ease: 'linear',
+                            }}
+                          />
+
+                          {/* Multicolor animated gradient overlay */}
+                          <motion.div
+                            className="absolute inset-0"
+                            style={{
+                              background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.8) 0%, rgba(139, 92, 246, 0.8) 25%, rgba(236, 72, 153, 0.8) 50%, rgba(6, 182, 212, 0.8) 75%, rgba(239, 68, 68, 0.8) 100%)',
+                              backgroundSize: '200% 100%',
+                              mixBlendMode: 'screen',
+                            }}
+                            animate={{
+                              backgroundPosition: ['0%', '200%'],
+                            }}
+                            transition={{
+                              duration: 4,
+                              repeat: Infinity,
+                              ease: 'linear',
+                            }}
+                          />
+
+                          {/* Glowing edge effect */}
+                          <motion.div
+                            className="absolute right-0 top-0 bottom-0 w-8"
+                            style={{
+                              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.6) 100%)',
+                              filter: 'blur(8px)',
+                            }}
+                            animate={{
+                              opacity: [0.3, 0.7, 0.3],
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              ease: 'easeInOut',
+                            }}
+                          />
+                        </motion.div>
+
+                        {/* Pulsing glow effect */}
+                        <motion.div
+                          className="absolute inset-0 rounded-full pointer-events-none"
+                          style={{
+                            boxShadow: selectedLoan.breachProbability > 50
+                              ? '0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 20px rgba(239, 68, 68, 0.2)'
+                              : '0 0 20px rgba(245, 158, 11, 0.4), inset 0 0 20px rgba(245, 158, 11, 0.2)',
+                          }}
+                          animate={{
+                            boxShadow: selectedLoan.breachProbability > 50
+                              ? [
+                                  '0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 20px rgba(239, 68, 68, 0.2)',
+                                  '0 0 30px rgba(239, 68, 68, 0.6), inset 0 0 25px rgba(239, 68, 68, 0.3)',
+                                  '0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 20px rgba(239, 68, 68, 0.2)',
+                                ]
+                              : [
+                                  '0 0 20px rgba(245, 158, 11, 0.4), inset 0 0 20px rgba(245, 158, 11, 0.2)',
+                                  '0 0 30px rgba(245, 158, 11, 0.6), inset 0 0 25px rgba(245, 158, 11, 0.3)',
+                                  '0 0 20px rgba(245, 158, 11, 0.4), inset 0 0 20px rgba(245, 158, 11, 0.2)',
+                                ],
+                          }}
+                          transition={{
+                            duration: 2.5,
+                            repeat: Infinity,
+                            ease: 'easeInOut',
+                          }}
+                        />
+                      </div>
                     </div>
-                    <span className="text-2xl font-bold text-white">
+                    <motion.span
+                      className="text-2xl font-bold text-white min-w-[60px] text-right"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.5, delay: 1 }}
+                    >
                       {selectedLoan.breachProbability}%
-                    </span>
+                    </motion.span>
                   </div>
                 </div>
                 <div>
@@ -186,13 +310,14 @@ export function CovenantMonitoring() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
+          className="h-full"
         >
-          <Card className="border-2 border-green-500/30 bg-green-500/10">
+          <Card className="border-2 border-green-500/30 bg-green-500/10 h-full flex flex-col">
             <CardHeader>
               <CardTitle className="text-green-400 text-lg">Loss Prevention</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
+            <CardContent className="flex-1">
+              <div className="space-y-4">
                 <div>
                   <p className="text-sm text-green-300/80 mb-1">Potential Loss Avoided</p>
                   <p className="text-3xl font-bold text-green-400">$5M-$10M</p>
