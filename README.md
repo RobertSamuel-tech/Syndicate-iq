@@ -64,35 +64,6 @@ npm run dev
 - **File Upload**: React Dropzone 14.3.8
 - **Date Utilities**: date-fns 4.1.0
 
-## 📁 Project Structure
-
-```
-syndicateiq-hackathon/
-├── src/
-│   ├── components/
-│   │   ├── ui/              # Base UI components (Button, Card, Badge, etc.)
-│   │   ├── layout/          # Layout components (Navbar, Sidebar, MainLayout)
-│   │   └── features/        # Feature-specific components
-│   │       ├── DueDiligence/
-│   │       ├── ESG/
-│   │       └── Dashboard/
-│   ├── pages/               # Main pages/routes
-│   │   ├── Dashboard.tsx
-│   │   ├── DueDiligence.tsx
-│   │   └── ESGVeritas.tsx
-│   ├── lib/
-│   │   ├── api/            # Mock API client
-│   │   ├── utils/          # Utility functions
-│   │   └── mockData/       # Mock data generators
-│   ├── types/              # TypeScript type definitions
-│   ├── App.tsx             # Root component with routing
-│   └── main.tsx            # Application entry point
-├── public/                 # Static assets
-├── package.json
-├── tailwind.config.js      # Tailwind CSS configuration
-└── vite.config.ts          # Vite configuration
-```
-
 ## 🎨 Design System
 
 ### Colors
