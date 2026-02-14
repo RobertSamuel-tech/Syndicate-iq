@@ -23,15 +23,6 @@ SyndicateIQ transforms syndicated loan operations by automating document process
 ```bash
 npm install
 npm run dev
-```
-
-## Demo
-Built for LMA Fintech Hackathon 2026
-
-## License
-MIT
-
----
 
 ## 📖 Detailed Documentation
 
@@ -72,39 +63,6 @@ MIT
 - **Icons**: Lucide React 0.562.0
 - **File Upload**: React Dropzone 14.3.8
 - **Date Utilities**: date-fns 4.1.0
-
-## 📦 Installation
-
-### Prerequisites
-
-- Node.js 18+ and npm
-- Git (for cloning the repository)
-
-### Setup Steps
-
-1. **Clone the repository** (or navigate to the project directory):
-   ```bash
-   cd syndicateiq-hackathon
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**:
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser** and navigate to the URL shown in the terminal (typically `http://localhost:5173`)
-
-## 🚀 Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
 
 ## 📁 Project Structure
 
@@ -149,7 +107,7 @@ syndicateiq-hackathon/
 - **Font Family**: Inter (via Google Fonts)
 - **Base Unit**: 4px spacing system (Tailwind default)
 
-## 📊 Mock Data
+## 📊 Data used
 
 The application uses comprehensive mock data generators for:
 - **Loans**: 18 realistic loan entries across multiple sectors
@@ -172,19 +130,17 @@ RiskScore = (documentCompleteness × 0.25) +
 
 ### Greenwashing Detection
 - **Transparency Score**: Based on data completeness and verification
-- **Performance Decline**: Flags >20% decline in key metrics
 - **Cherry-Picking**: Detects selective positive reporting
 - **Vague Targets**: Identifies missing specific numbers/timelines
 
 ### ESG Scoring
 - **Overall Score**: Weighted average (E: 40%, S: 30%, G: 30%)
-- **LMA Compliance**: Checklist-based scoring system
 
 ## 🧪 Testing Checklist
 
 See [TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md) for comprehensive testing guidelines.
 
-### Quick Test Checklist
+###  Test Checklist
 
 - [ ] All pages load correctly
 - [ ] Navigation between modules works
@@ -201,11 +157,8 @@ See [TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md) for comprehensive testing gui
 - [ ] Export functions generate reports
 - [ ] Responsive design works on mobile/tablet
 
-## 📸 Screenshots
 
-*Note: Add screenshots of key features here for demo purposes*
-
-## 🎯 LMA Hackathon Categories Coverage
+## 🎯  Categories Coverage
 
 1. **Transparent Loan Trading** ✅
    - Module 2: Settlement Due Diligence Accelerator
@@ -227,27 +180,11 @@ See [TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md) for comprehensive testing gui
    - Module 5: Dashboard Hub
    - Covenant monitoring and alerts
 
-## 🚧 Limitations & Notes
-
-- **Frontend-Only**: This is a frontend-only implementation using mock data
-- **No Backend**: All API calls are simulated with delays
-- **Mock Data**: Data is generated programmatically for demo purposes
-- **No Authentication**: Demo assumes authenticated user context
-- **PDF Processing**: Actual PDF parsing is simulated (no real extraction)
-
-## 📝 License
-
-This project is built for the LMA Hackathon 2025.
-
-## 👥 Authors
-
-Built for LMA Hackathon 2025
 
 ## 🙏 Acknowledgments
-
-- LMA for organizing the hackathon
-- All open-source contributors whose libraries made this project possible
+- open-source
 
 ---
 
-**Built with ❤️ for LMA Hackathon 2025**
+**Built with ❤️ forWiCS Online Hackathon (Winter 2026)
+**
