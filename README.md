@@ -157,5 +157,5 @@ See [TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md) for comprehensive testing gui
 
 ---
 
-**Built with ❤️ forWiCS Online Hackathon (Winter 2026)
+**Built with ❤️ for WiCS Online Hackathon (Winter 2026)
 **
