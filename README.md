@@ -34,6 +34,8 @@ This is not just a dashboard — it is a multi-engine AI workflow system built f
 
 The platform integrates parallel analytical engines into a unified operational architecture.
 
+
+
 🌍 Real-World Impact
 Syndicated loans finance infrastructure, renewable energy, healthcare, and global development.
 Improving this system directly impacts:
@@ -42,8 +44,9 @@ Sustainable investing
 Transparency in ESG claims
 Institutional accountability
 
-Measurable Impact
 
+
+Measurable Impact
 ⏱ 85% reduction in due diligence time
 📄 99% faster document processing
 ⚠️ 60–90 day early breach prediction
@@ -53,27 +56,22 @@ SyndicateIQ helps institutions make faster, safer, and more responsible decision
 
 ⚙️ System Architectur
 SyndicateIQ follows a modular, production-oriented architecture:
-
 Document Ingestion Layer
 Extracts clauses, covenants, ESG metrics, and financial terms.
-
 Validation & Normalization Engine
 Ensures data completeness and structural integrity.
 Parallel Intelligence Engines
 Settlement Risk Engine
 Covenant Monitoring Engine
 ESG Veritas Engine
-
 Governance & Audit Layer
 Tracks alerts, compliance status, and activity logs.
-
 Portfolio Intelligence Hub
 Centralized dashboard for decision-making.
 
 This layered architecture ensures scalability, extensibility, and clarity.
 
 🔬 Technical Depth
-
 🔹 Settlement Risk Model
 RiskScore = (documentCompleteness × 0.25) +
             (amendmentComplexity × 0.20) +
@@ -133,8 +131,7 @@ Institutional deployment at scale
 
 The architecture supports enterprise-grade growth.
 
-Hackathon Alignment
-
+Hackathon Alignment : 
 This project reflects
 Strong technical execution
 Real-world institutional relevance
