@@ -73,6 +73,7 @@ Centralized dashboard for decision-making.
 This layered architecture ensures scalability, extensibility, and clarity.
 
 🔬 Technical Depth
+
 🔹 Settlement Risk Model
 RiskScore = (documentCompleteness × 0.25) +
             (amendmentComplexity × 0.20) +
